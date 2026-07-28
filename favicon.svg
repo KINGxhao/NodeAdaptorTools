@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">编号去重格式化工具图标</title>
+  <desc id="desc">带有星号和编号线条的去重工具图标</desc>
+  <rect width="64" height="64" rx="14" fill="#0f766e"/>
+  <path d="M18 20h28M18 32h20M18 44h28" fill="none" stroke="#fffaf1" stroke-width="5" stroke-linecap="round"/>
+  <path d="M46 25l2.2 4.5 5 .7-3.6 3.5.8 5-4.4-2.3-4.4 2.3.8-5-3.6-3.5 5-.7L46 25z" fill="#f1c453"/>
+</svg>
