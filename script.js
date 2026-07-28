@@ -3,6 +3,7 @@ const sampleText = `*18982728* ,*18982740* ,*18982748*`;
 const sourceInput = document.querySelector("#sourceInput");
 const lineOutput = document.querySelector("#lineOutput");
 const targetOutput = document.querySelector("#targetOutput");
+const splunkOutput = document.querySelector("#splunkOutput");
 const totalCount = document.querySelector("#totalCount");
 const uniqueCount = document.querySelector("#uniqueCount");
 const duplicateCount = document.querySelector("#duplicateCount");
@@ -34,6 +35,14 @@ function formatTarget(items) {
   return items.map((item) => `*${item}*`).join(" ,");
 }
 
+function formatSplunk(items) {
+  if (items.length === 0) {
+    return "";
+  }
+
+  return `logEvent="Delivered"\nbusinessKeyValue IN (${formatTarget(items)} )`;
+}
+
 function renderResult() {
   const numbers = extractNumbers(sourceInput.value);
   const uniqueNumbers = uniqueInOrder(numbers);
@@ -41,6 +50,7 @@ function renderResult() {
 
   lineOutput.value = uniqueNumbers.join("\n");
   targetOutput.value = formatTarget(uniqueNumbers);
+  splunkOutput.value = formatSplunk(uniqueNumbers);
   totalCount.textContent = numbers.length;
   uniqueCount.textContent = uniqueNumbers.length;
   duplicateCount.textContent = duplicateTotal;
