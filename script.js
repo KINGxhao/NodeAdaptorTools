@@ -1,4 +1,4 @@
-const sampleText = `*18982728* ,*18982740* ,*18982748*`;
+const sampleText = `*18982728* ,*JF7766-100* ,*18982748*`;
 
 const sourceInput = document.querySelector("#sourceInput");
 const lineOutput = document.querySelector("#lineOutput");
@@ -12,9 +12,11 @@ const processButton = document.querySelector("#processButton");
 const clearInput = document.querySelector("#clearInput");
 const loadSample = document.querySelector("#loadSample");
 const copyButtons = document.querySelectorAll("[data-copy]");
+const targetSeparatorButtons = document.querySelectorAll("[data-target-separator]");
+let targetSeparator = "comma";
 
-function extractNumbers(text) {
-  return text.match(/\d+/g) || [];
+function extractIdentifiers(text) {
+  return (text.match(/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*/g) || []).filter((item) => /\d/.test(item));
 }
 
 function uniqueInOrder(items) {
@@ -31,36 +33,54 @@ function uniqueInOrder(items) {
   return result;
 }
 
-function formatTarget(items) {
-  return items.map((item) => `*${item}*`).join(" ,");
+function formatTarget(items, separator = targetSeparator) {
+  const separatorText = separator === "or" ? " OR " : " ,";
+
+  return items.map((item) => `*${item}*`).join(separatorText);
 }
 
-function formatSplunk(items) {
+function formatSplunk(items, separator = targetSeparator) {
   if (items.length === 0) {
     return "";
+  }
+
+  if (separator === "or") {
+    return `logEvent="PUBLISHER_RECEIVED"\n${formatTarget(items, separator)}`;
   }
 
   return `logEvent="Delivered"\nbusinessKeyValue IN (${formatTarget(items)} )`;
 }
 
 function renderResult() {
-  const numbers = extractNumbers(sourceInput.value);
-  const uniqueNumbers = uniqueInOrder(numbers);
-  const duplicateTotal = numbers.length - uniqueNumbers.length;
+  const identifiers = extractIdentifiers(sourceInput.value);
+  const uniqueIdentifiers = uniqueInOrder(identifiers);
+  const duplicateTotal = identifiers.length - uniqueIdentifiers.length;
 
-  lineOutput.value = uniqueNumbers.join("\n");
-  targetOutput.value = formatTarget(uniqueNumbers);
-  splunkOutput.value = formatSplunk(uniqueNumbers);
-  totalCount.textContent = numbers.length;
-  uniqueCount.textContent = uniqueNumbers.length;
+  lineOutput.value = uniqueIdentifiers.join("\n");
+  targetOutput.value = formatTarget(uniqueIdentifiers);
+  splunkOutput.value = formatSplunk(uniqueIdentifiers);
+  totalCount.textContent = identifiers.length;
+  uniqueCount.textContent = uniqueIdentifiers.length;
   duplicateCount.textContent = duplicateTotal;
 
-  if (numbers.length === 0) {
-    statusText.textContent = "没有提取到数字。";
+  if (identifiers.length === 0) {
+    statusText.textContent = "没有提取到编号。";
     return;
   }
 
-  statusText.textContent = `已提取 ${numbers.length} 个编号，去重后 ${uniqueNumbers.length} 个。`;
+  statusText.textContent = `已提取 ${identifiers.length} 个编号，去重后 ${uniqueIdentifiers.length} 个。`;
+}
+
+function updateTargetSeparator(nextSeparator) {
+  targetSeparator = nextSeparator;
+
+  targetSeparatorButtons.forEach((button) => {
+    const isActive = button.dataset.targetSeparator === targetSeparator;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  renderResult();
 }
 
 async function copyTextFrom(id, button) {
@@ -105,6 +125,12 @@ loadSample.addEventListener("click", () => {
 copyButtons.forEach((button) => {
   button.addEventListener("click", () => {
     copyTextFrom(button.dataset.copy, button);
+  });
+});
+
+targetSeparatorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    updateTargetSeparator(button.dataset.targetSeparator);
   });
 });
 

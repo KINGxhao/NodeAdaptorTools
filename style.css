@@ -181,6 +181,35 @@ textarea {
   margin-top: 14px;
 }
 
+.result-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.segmented-control {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fffdf8;
+}
+
+.segment-button {
+  min-width: 42px;
+  min-height: 34px;
+  border-radius: 4px;
+  padding: 0 10px;
+  color: var(--accent-dark);
+  font-weight: 700;
+  background: transparent;
+}
+
+.segment-button.active {
+  color: #fffdf8;
+  background: var(--accent);
+}
+
 .primary-button,
 .ghost-button,
 .copy-button,
@@ -292,6 +321,16 @@ textarea {
   .text-button,
   .primary-button {
     width: 100%;
+  }
+
+  .result-actions {
+    display: grid;
+    gap: 10px;
+  }
+
+  .segmented-control {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   textarea {

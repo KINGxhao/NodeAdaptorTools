@@ -26,7 +26,7 @@
           <div class="panel-header">
             <div>
               <h2 id="input-title">原始内容</h2>
-              <p>可粘贴多行数字，或类似 *18982728* ,*18982740* 的内容。</p>
+              <p>可粘贴多行编号，或类似 *18982728* ,*JF7766-100* 的内容。</p>
             </div>
             <button class="text-button" id="clearInput" type="button">清空</button>
           </div>
@@ -72,9 +72,15 @@
           <div class="panel-header compact">
             <div>
               <h2>目标格式</h2>
-              <p>*编号* ,*编号*。</p>
+              <p>可切换逗号或 OR 分隔。</p>
             </div>
-            <button class="copy-button" data-copy="targetOutput" type="button">复制</button>
+            <div class="result-actions">
+              <div class="segmented-control" aria-label="目标格式分隔符">
+                <button class="segment-button active" data-target-separator="comma" type="button" aria-pressed="true">,</button>
+                <button class="segment-button" data-target-separator="or" type="button" aria-pressed="false">OR</button>
+              </div>
+              <button class="copy-button" data-copy="targetOutput" type="button">复制</button>
+            </div>
           </div>
           <textarea id="targetOutput" spellcheck="false" readonly></textarea>
         </article>
