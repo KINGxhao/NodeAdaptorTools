@@ -34,6 +34,10 @@ function uniqueInOrder(items) {
 }
 
 function formatTarget(items, separator = targetSeparator) {
+  if (separator === "plain-comma") {
+    return items.join(",");
+  }
+
   const separatorText = separator === "or" ? " OR " : " ,";
 
   return items.map((item) => `*${item}*`).join(separatorText);
